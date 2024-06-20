@@ -13,21 +13,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.myproject.ui.theme.MyProjectTheme
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var questionTextView: TextView
+    lateinit var answer1Button: Button
+    lateinit var answer2Button: Button
+    lateinit var answer3Button: Button
+    lateinit var answer4Button: Button
+    lateinit var scoreTextView: TextView
+    lateinit var questions: List<Question>
+    var currentQuestionIndex = 0
+    var score = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            MyProjectTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
-        }
+
+
     }
 }
+
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
@@ -41,6 +45,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     MyProjectTheme {
-        Greeting("Android")
+        Greeting("Edson Muandula")
     }
 }
