@@ -1,14 +1,5 @@
 <resources>
-    <string-array name="questions">
-        <item>What is the capital of France?</item>
-        <item>What is the tallest mountain in the world?</item>
-    </string-array>
-    <string-array name="answer1_options">
-        <item>Paris</item>
-        <item>Mount Everest</item>
-    </string-array>
-    <string-array name="answer2_options">
-        <item>Berlin</item>
-        <item>K2</item>
-    </string-array>
+    <string name="app_name">Happy Birthday</string>
+    <string name="happy_birthday">Happy Birthday %1$s!</string>
+    <string name="from">From: %1$s</string>
 </resources>
