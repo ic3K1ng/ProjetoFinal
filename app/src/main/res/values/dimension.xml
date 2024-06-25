@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="happy_birthday_fontsize">96sp</dimen>
-    <dimen name="happy_birthday_lineheight">112sp</dimen>
+    <dimen name="happy_birthday_fontsize">90sp</dimen>
+    <dimen name="happy_birthday_lineheight">108sp</dimen>
 </resources>
