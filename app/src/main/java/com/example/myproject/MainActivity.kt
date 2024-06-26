@@ -168,7 +168,7 @@ fun MyApp(modifier: Modifier = Modifier) {
             Button(onClick = {
                 if(data != "" && name != "") {
                     val today = LocalDate.now()
-                    val birth = LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    val birth = LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyy-mm-dd"))
                     val period = today.minusYears(birth.year.toLong())
                     //val birthdayThisYear = LocalDate.of(today.year, birth.monthValue, birth.dayOfMonth)
 
@@ -176,8 +176,8 @@ fun MyApp(modifier: Modifier = Modifier) {
                         hasBirthday = true
                         years = "${period.year} anos!"
                     } else {
-                        val dias = daysUntilBirthday(birth.monthValue, birth.dayOfMonth)
-                        message = "Falta-te $dias dias para o teu aniversário"
+                        val (monthsRemaining, daysRemaining) = monthsAndDaysUntilBirthday(birth.monthValue, birth.dayOfMonth)
+                        message = "Faltam $monthsRemaining meses e $daysRemaining dias para o seu aniversário!"
                     }
                 } else {
                     message = "Os 2 campos acima são obrigatórios!"
@@ -191,15 +191,24 @@ fun MyApp(modifier: Modifier = Modifier) {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun daysUntilBirthday(birthdayMonth: Int, birthdayDay: Int): Int {
+fun monthsAndDaysUntilBirthday(birthdayMonth: Int, birthdayDay:Int): Pair<Int, Int> {
     val today = LocalDate.now()
-    val birthdayThisYear = LocalDate.of(today.year, birthdayMonth, birthdayDay)
-    val nextBirthday = if (birthdayThisYear.isBefore(today)) {
-        birthdayThisYear.plusYears(1)
+    val nextYear = today.plusYears(1)
+    val monthsUntilBirthday = if ((birthdayMonth < nextYear.monthValue) || (birthdayMonth == nextYear.monthValue )) {
+        12 - (nextYear.monthValue - birthdayMonth)
     } else {
-        birthdayThisYear
+        if (birthdayDay >= nextYear.dayOfMonth){
+            birthdayMonth - nextYear.monthValue
+        }else{
+            0
+        }
     }
-    return Period.between(today, nextBirthday).days
+    val daysUntilBirthday = if (birthdayDay < nextYear.dayOfMonth) {
+        LocalDate.of(nextYear.year, nextYear.month, nextYear.dayOfMonth).lengthOfMonth() - (nextYear.dayOfMonth - birthdayDay)
+    } else {
+        birthdayDay - nextYear.dayOfMonth
+    }
+    return Pair(monthsUntilBirthday, daysUntilBirthday)
 }
 
 @Preview(showBackground = true)
