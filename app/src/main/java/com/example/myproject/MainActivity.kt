@@ -35,12 +35,16 @@ import androidx.compose.ui.unit.sp
 import com.example.myproject.ui.theme.MyProjectTheme
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
@@ -61,12 +65,11 @@ class MainActivity : ComponentActivity() {
 }
 
 
-
 @Composable
 fun HappyBirthdayCard(birthdayName: String, from: String, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Image(
-            painter = painterResource(id = R.drawable.androidparty),
+            painter = painterResource(id = R.drawable.g_day),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             alpha = 0.5F,
@@ -114,66 +117,81 @@ fun MyApp(modifier: Modifier = Modifier) {
     var message by remember { mutableStateOf("") }
 
     if(!hasBirthday)
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Text(
-            stringResource(id = R.string.digite_teu_nome),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-        )
-        Spacer(modifier = modifier.height(25.dp))
-        TextField(
-            value = name,
-            label = { Text(stringResource(id = R.string.nome)) },
-            onValueChange = { name = it},
-            maxLines = 1,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done,
-            ),
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-        )
-        TextField(
-            value = data,
-            label = { Text(stringResource(id = R.string.data)) },
-            onValueChange = { data = it},
-            placeholder = {Text("aaaa-mm-dd")},
-            maxLines = 1,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done,
-            ),
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-        )
-        Text(message)
-        Button(onClick = {
-            val today = LocalDate.now()
-            val birth = LocalDate.parse(data)
-            val period = today.minusYears(birth.year.toLong())
-            if((today.dayOfMonth == birth.dayOfMonth) && (today.monthValue == birth.monthValue)) {
-                hasBirthday = true
-                years = "${period.year} anos!"
-            } else {
-                message = "Falta-te x dias pra teu aniversário"
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(
+                stringResource(id = R.string.app_name),
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                fontStyle = FontStyle.Italic,
+                modifier = modifier.padding(35.dp)
+            )
+            Text(
+                stringResource(id = R.string.digite_teu_nome),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(modifier = modifier.height(10.dp))
+            TextField(
+                value = name,
+                label = { Text(stringResource(id = R.string.nome)) },
+                onValueChange = { name = it},
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done,
+                ),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp)
+            )
+            TextField(
+                value = data,
+                label = { Text(stringResource(id = R.string.data)) },
+                onValueChange = { data = it},
+                placeholder = {Text("aaaa-mm-dd")},
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done,
+                ),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            )
+            Text(message)
+            Button(onClick = {
+                if(data != "" && name != "") {
+                    val today = LocalDate.now()
+                    val birth = LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    val period = today.minusYears(birth.year.toLong())
+                    if ((today.dayOfMonth == birth.dayOfMonth) && (today.monthValue == birth.monthValue)) {
+                        hasBirthday = true
+                        years = "${period.year} anos!"
+                    } else {
+                        message = "Falta-te x dias pra teu aniversário"
+                    }
+                } else {
+                    message = "Os 2 campos acima são obrigatórios!"
+                    }
+            }) {
+                Text(stringResource(id = R.string.avancar))
             }
-        }) {
-            Text(stringResource(id = R.string.avancar))
         }
-    }
     else
-    HappyBirthdayCard(name, years)
+        HappyBirthdayCard(name, years)
 }
+
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     MyProjectTheme {
-        MyApp()
+        //MyApp()
+        HappyBirthdayCard("Emân", "18")
     }
 }

@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">G-Day</string>
+    <string name="app_name">G-Day app</string>
     <string name="happy_birthday">Happy Birthday %1$s!</string>
     <string name="year">Pelos os seus </string>
-    <string name="digite_teu_nome">Digite o teu nome e a tua data de nascimento</string>
+    <string name="digite_teu_nome">Digite o teu nome e a tua data de nascimento:</string>
     <string name="nome">Nome</string>
     <string name="data">Data</string>
     <string name="avancar">Avançar</string>
