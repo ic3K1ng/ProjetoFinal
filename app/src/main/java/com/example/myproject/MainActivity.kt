@@ -1,5 +1,6 @@
 package com.example.myproject
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -35,8 +36,12 @@ import com.example.myproject.ui.theme.MyProjectTheme
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import java.time.LocalDate
+import java.util.Date
 
 class MainActivity : ComponentActivity() {
 
@@ -69,7 +74,7 @@ fun HappyBirthdayCard(birthdayName: String, from: String, modifier: Modifier = M
         )
         HappyBirthdayText(
             birthdayName = birthdayName,
-            from = from,
+            year = from,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(8.dp)
@@ -78,7 +83,7 @@ fun HappyBirthdayCard(birthdayName: String, from: String, modifier: Modifier = M
 }
 
 @Composable
-fun HappyBirthdayText(birthdayName: String, from: String, modifier: Modifier = Modifier) {
+fun HappyBirthdayText(birthdayName: String, year: String, modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.SpaceAround,
         modifier = modifier
@@ -92,20 +97,23 @@ fun HappyBirthdayText(birthdayName: String, from: String, modifier: Modifier = M
         )
 
         Text(
-            text = stringResource(R.string.from, from),
+            text = stringResource(R.string.year, year),
             fontSize = 30.sp,
             modifier = Modifier.align(Alignment.End)
         )
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("NewApi")
 @Composable
 fun MyApp(modifier: Modifier = Modifier) {
-    var hasBirthday: Boolean = false
+    var hasBirthday by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
     var data by remember { mutableStateOf("") }
+    var years by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
 
+    if(!hasBirthday)
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -121,6 +129,11 @@ fun MyApp(modifier: Modifier = Modifier) {
             value = name,
             label = { Text(stringResource(id = R.string.nome)) },
             onValueChange = { name = it},
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done,
+            ),
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
@@ -130,12 +143,32 @@ fun MyApp(modifier: Modifier = Modifier) {
             label = { Text(stringResource(id = R.string.data)) },
             onValueChange = { data = it},
             placeholder = {Text("aaaa-mm-dd")},
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done,
+            ),
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
         )
-        //HappyBirthdayCard("Edson", "Eva")
+        Text(message)
+        Button(onClick = {
+            val today = LocalDate.now()
+            val birth = LocalDate.parse(data)
+            val period = today.minusYears(birth.year.toLong())
+            if((today.dayOfMonth == birth.dayOfMonth) && (today.monthValue == birth.monthValue)) {
+                hasBirthday = true
+                years = "${period.year} anos!"
+            } else {
+                message = "Falta-te x dias pra teu aniversário"
+            }
+        }) {
+            Text(stringResource(id = R.string.avancar))
+        }
     }
+    else
+    HappyBirthdayCard(name, years)
 }
 @Preview(showBackground = true)
 @Composable
