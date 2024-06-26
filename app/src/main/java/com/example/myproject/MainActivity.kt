@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import java.time.LocalDate
+import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.util.Date
 
@@ -169,15 +170,18 @@ fun MyApp(modifier: Modifier = Modifier) {
                     val today = LocalDate.now()
                     val birth = LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     val period = today.minusYears(birth.year.toLong())
+                    //val birthdayThisYear = LocalDate.of(today.year, birth.monthValue, birth.dayOfMonth)
+
                     if ((today.dayOfMonth == birth.dayOfMonth) && (today.monthValue == birth.monthValue)) {
                         hasBirthday = true
                         years = "${period.year} anos!"
                     } else {
-                        message = "Falta-te x dias pra teu aniversário"
+                        val dias = daysUntilBirthday(birth.monthValue, birth.dayOfMonth)
+                        message = "Falta-te $dias dias para o teu aniversário"
                     }
                 } else {
                     message = "Os 2 campos acima são obrigatórios!"
-                    }
+                }
             }) {
                 Text(stringResource(id = R.string.avancar))
             }
@@ -186,6 +190,17 @@ fun MyApp(modifier: Modifier = Modifier) {
         HappyBirthdayCard(name, years)
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun daysUntilBirthday(birthdayMonth: Int, birthdayDay: Int): Int {
+    val today = LocalDate.now()
+    val birthdayThisYear = LocalDate.of(today.year, birthdayMonth, birthdayDay)
+    val nextBirthday = if (birthdayThisYear.isBefore(today)) {
+        birthdayThisYear.plusYears(1)
+    } else {
+        birthdayThisYear
+    }
+    return Period.between(today, nextBirthday).days
+}
 
 @Preview(showBackground = true)
 @Composable
