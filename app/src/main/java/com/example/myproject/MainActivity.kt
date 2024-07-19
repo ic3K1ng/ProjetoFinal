@@ -168,7 +168,7 @@ fun MyApp(modifier: Modifier = Modifier) {
             Button(onClick = {
                 if(data != "" && name != "") {
                     val today = LocalDate.now()
-                    val birth = LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyy-mm-dd"))
+                    val birth = LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     val period = today.minusYears(birth.year.toLong())
                     //val birthdayThisYear = LocalDate.of(today.year, birth.monthValue, birth.dayOfMonth)
 
